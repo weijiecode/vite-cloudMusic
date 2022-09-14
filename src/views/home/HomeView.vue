@@ -1,15 +1,13 @@
 <template>
     <div class="content">
-        <el-button type="primary">Primary</el-button>
-        <div class="menu">
-            
-        </div>
+        <Header></Header>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, toRefs } from 'vue'
 import { homeApi } from '../../request/home'
+import Header from './component/header.vue'
 
 const state = reactive({
     blocks: []
@@ -26,11 +24,4 @@ homeApi().then( res => {
 </script>
 
 <style lang="scss" scoped>
-    .content {
-        .menu {
-            width: 10px;
-            height: 10px;
-            background-color: #efefef;
-        }
-    }
 </style>
