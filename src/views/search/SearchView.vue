@@ -1,3 +1,3 @@
 <template>
-    热门
+    搜索
 </template>

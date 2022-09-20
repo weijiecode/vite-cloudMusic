@@ -1,27 +1,29 @@
 <template>
     <div class="content">
-        <Header></Header>
+        <div class="toHeader">
+            <Header></Header>
+            <Nav></Nav>
+        </div>
+        <router-view class="toContent"></router-view>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs } from 'vue'
-import { homeApi } from '../../request/home'
-import Header from './component/header.vue'
+import Header from './component/header.vue';
+import Nav from './component/nav.vue';
 
-const state = reactive({
-    blocks: []
-})
 
-let { blocks } = toRefs(state)
-homeApi().then( res => {
-    if(res.code === 200) {
-       blocks.value = res.data.blocks
-       console.log(blocks.value)
-    }
-} )
 
 </script>
 
 <style lang="scss" scoped>
+.toHeader {
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
+
+.toContent {
+    margin-top: 135px;
+}
 </style>

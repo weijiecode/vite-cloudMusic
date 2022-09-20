@@ -1,15 +1,8 @@
 import request from './request'
+import { Result } from '../types/home'
 
 
-type Result<T> = Promise<homeResult<T>>
-
-interface homeResult<T> {
-    code: number
-    data: T
-}
-
-interface homeRes {
-    blocks: []
-}
-
-export const homeApi = ():Result<homeRes> => request.get('/homepage/block/page')
+// 测试
+// export const homeApi = ():Result<homeData> => request.get('/homepage/block/page')
+// 推荐音乐
+export const recommendApi = ():Result => request.get('/personalized?limit=6')
