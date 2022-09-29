@@ -47,38 +47,6 @@
                 </p>
                 <playicon></playicon>
             </li>
-            <li>
-                <p class="songName">我也曾是你</p>
-                <p class="songInfo">
-                    <icon class="sq_icon"></icon>
-                    张杰-福
-                </p>
-                <playicon></playicon>
-            </li>
-            <li>
-                <p class="songName">我也曾是你</p>
-                <p class="songInfo">
-                    <icon class="sq_icon"></icon>
-                    张杰-福
-                </p>
-                <playicon></playicon>
-            </li>
-            <li>
-                <p class="songName">我也曾是你</p>
-                <p class="songInfo">
-                    <icon class="sq_icon"></icon>
-                    张杰-福
-                </p>
-                <playicon></playicon>
-            </li>
-            <li>
-                <p class="songName">我也曾是你</p>
-                <p class="songInfo">
-                    <icon class="sq_icon"></icon>
-                    张杰-福
-                </p>
-                <playicon></playicon>
-            </li>
         </ul>
     </div>
 </template>
