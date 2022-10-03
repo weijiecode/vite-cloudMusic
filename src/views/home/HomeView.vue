@@ -12,8 +12,6 @@
 import Header from './component/header.vue';
 import Nav from './component/nav.vue';
 
-
-
 </script>
 
 <style lang="scss" scoped>

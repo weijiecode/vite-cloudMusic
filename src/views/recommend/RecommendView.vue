@@ -11,26 +11,6 @@
                 <img :src="item.picUrl" alt="">
                 <p>{{item.name}}</p>
             </div>
-            <!-- <div class="rec_item">
-                <img src="../../assets/1.jpeg" alt="">
-                <p>这是一首好听的歌单这是一首好听的歌</p>
-            </div>
-            <div class="rec_item">
-                <img src="../../assets/1.jpeg" alt="">
-                <p>这是一首好听的歌单这是一首好听的歌</p>
-            </div>
-            <div class="rec_item">
-                <img src="../../assets/1.jpeg" alt="">
-                <p>这是一首好听的歌单这是一首好听的歌</p>
-            </div>
-            <div class="rec_item">
-                <img src="../../assets/1.jpeg" alt="">
-                <p>这是一首好听的歌单这是一首好听的歌</p>
-            </div>
-            <div class="rec_item">
-                <img src="../../assets/1.jpeg" alt="">
-                <p>这是一首好听的歌单这是一首好听的歌</p>
-            </div> -->
         </div>
         <!-- 标题 -->
         <div class="title">
@@ -39,11 +19,11 @@
         </div>
         <!-- 最新音乐 -->
         <ul class="newSong">
-            <li>
-                <p class="songName">我也曾是你</p>
+            <li @click="toPlay(item.id)" v-for="item in newMusicData" :key="item.id">
+                <p class="songName">{{item.name}}</p>
                 <p class="songInfo">
                     <icon class="sq_icon"></icon>
-                    张杰-福
+                    {{getName(item.song.artists)}}-{{item.song.album.name}}
                 </p>
                 <playicon></playicon>
             </li>
@@ -53,7 +33,8 @@
 
 <script lang="ts" setup>
 import { reactive, toRefs } from 'vue'
-import { recommendApi } from '../../request/home'
+import { useRouter } from 'vue-router'
+import { getRecommend, getNewMusic } from '../../request/home'
 
 const stateData = reactive({
     recommendData: [{
@@ -61,14 +42,55 @@ const stateData = reactive({
         name: '',
         picUrl: '',
         playCount: 0
+    }],
+    newMusicData: [{
+        id: 0,
+        name: '',
+        song: {
+            artists: [{
+                name: ''
+            }],
+            album: {
+                name: ''
+            }
+        }
     }]
 })
 
-const { recommendData } = toRefs(stateData)
-recommendApi().then(res => {
-    console.log(res)
+const { recommendData, newMusicData } = toRefs(stateData)
+// 获取推荐歌单
+getRecommend().then(res => {
+    console.log("推荐歌单:", res)
     recommendData.value = res.result
 })
+
+// 获取最新音乐
+getNewMusic().then(res => {
+    newMusicData.value = res.result
+    console.log(newMusicData.value)
+    console.log("最新音乐:", res)
+})
+
+// 封装歌手拼接方法
+const getName = (params: { name: string }[]) => {
+    let str = ''
+    params.forEach(subitem => {
+        str += subitem.name + " / "
+    })
+    str = str.slice(0, str.length - 2)
+    return str
+}
+
+// 跳转到播放页面
+const router = useRouter()
+const toPlay = (id: number) => {
+    router.push({
+        path: '/play',
+        query: {
+            id: id
+        }
+    })
+}
 </script>  
 
 <style lang="scss" scoped>
