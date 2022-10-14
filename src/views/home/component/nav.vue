@@ -16,7 +16,8 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const rpath = ref('推荐音乐')
-
+router.push('/recommend')
+rpath.value = '推荐音乐'
 const toRecommend = () => {
     router.push('/recommend')
     rpath.value = '推荐音乐'

@@ -13,7 +13,7 @@
                 <p>{{lrc}}</p>
             </div>
             <!-- 快进快退 -->
-            <input type="range" id="range" class="range" value="0">
+            <input v-on:input="inputFunc" type="range" id="range" class="range" v-model="rangevalue">
         </div>
         <div class="bg">
             <img id="bgImg" :src="picUrl" alt="">
@@ -22,26 +22,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, toRefs } from "vue"
+import { ref, reactive, toRefs, watch } from "vue"
 import { useRoute } from 'vue-router'
 import { getMusicUrl, getMusicdetail, getlyric } from '../../request/home'
+import lyric from 'wu-lyric-parser'
 
 
 const audio = ref<null | HTMLAudioElement>(null)
+// 进度条值
+const rangevalue = ref(0)
 
 const playclass = ref('disk')
-const play = () => {
-    // 判断是否加载完成
-    audio.value?.onloadedmetadata
-    if (playclass.value === 'disk') {
-        playclass.value = 'disk running'
-        audio.value?.play()
-    } else {
-        playclass.value = 'disk'
-        audio.value?.pause()
-    }
-}
-
 // 获取路由传过来的参数
 const route = useRoute()
 const musicId = ref('')
@@ -72,28 +63,71 @@ getMusicdetail(musicId.value).then(res => {
 
 // 获取歌词
 const lrc = ref('')
+const lyr = ref<any>('')
 getlyric(musicId.value).then(res => {
     console.log("歌词：", res)
     if (res.code === 200) {
-        lrc.value = res.lrc.lyric
+        console.log('歌词1', lrc.value)
+        lyr.value = new lyric(res.lrc.lyric, (res: any) => {
+            // console.log('!', res.txt)
+            lrc.value = res.txt
+        })
     }
 })
 
 // 检测歌曲是否加载完成
+const isonload = ref(false)
 const onLoadedmetadata = (res: Event) => {
-    console.log("加载完成", res)
+    // console.log("加载完成", res)
+    isonload.value = true
+}
+const play = () => {
+    // 判断是否加载完成
+    if (isonload.value == true) {
+        if (playclass.value === 'disk') {
+            playclass.value = 'disk running'
+            audio.value?.play()
+            lyr.value.play()
+            console.log("参数一", audio.value?.currentTime)
+            console.log("参数二", audio.value?.duration)
+        } else {
+            playclass.value = 'disk'
+            audio.value?.pause()
+            lyr.value.togglePlay()
+        }
+    }
 }
 
-// 进度条
+// 歌曲播放时滑块自动前进
 const onTimeupdate = (res: any) => {
-    // state.audio.currentTime = res.target.currentTime;
-    // console.log(state.audio.currentTime)
-    // state.sliderTime = parseInt(
-    //     (state.audio.currentTime / state.audio.maxTime) * 100
-    // );
-    // state.sliderTime= formatProcessToolTip(state.sliderTime)
-    console.log(res)
+    // console.log(res)
+    rangevalue.value = 100 * (audio.value?.currentTime || 0) / (audio.value?.duration || 0)
+
 }
+
+const inputFunc = (res: any) => {
+    console.log(res)
+    if (audio.value?.currentTime) {
+        audio.value.currentTime = rangevalue.value * (audio.value?.duration || 0) / 100
+        lyr.value.seek(audio.value.currentTime * 1000)
+        playclass.value = 'disk running'
+        audio.value.play()
+        if (playclass.value === 'disk'){}else 
+        console.log('@#', lyr.value)
+    }
+}
+
+// 监听进度条
+// watch(rangevalue, () => {
+//     if (audio.value?.currentTime) {
+//         audio.value.currentTime = rangevalue.value * (audio.value?.duration || 0) / 100
+//         lyr.value.seek(audio.value.currentTime * 1000)
+//         audio.value.play()
+//         if (playclass.value === 'disk'){}else 
+//         console.log('@#', audio.value.currentTime)
+//     }
+// })
+
 
 
 </script>

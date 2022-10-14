@@ -14,7 +14,8 @@
     "sass": "^1.54.9",
     "vue": "^3.2.37",
     "vue-router": "^4.0.13",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "wu-lyric-parser": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.0",
