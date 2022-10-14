@@ -1,6 +1,6 @@
 <template>
     <!-- audio是否可见是controls属性，去除为不可见 -->
-    <audio id="myAudio" ref="audio" :src="musicurl"></audio>
+    <audio id="myAudio" ref="audio" :src="musicurl" @timeupdate="onTimeupdate" @canplay="onLoadedmetadata"></audio>
     <div class="container">
         <div class="info">
             <div :class="playclass" @click="play">
@@ -12,6 +12,8 @@
             <div class="lyric">
                 <p>{{lrc}}</p>
             </div>
+            <!-- 快进快退 -->
+            <input type="range" id="range" class="range" value="0">
         </div>
         <div class="bg">
             <img id="bgImg" :src="picUrl" alt="">
@@ -25,10 +27,12 @@ import { useRoute } from 'vue-router'
 import { getMusicUrl, getMusicdetail, getlyric } from '../../request/home'
 
 
-const audio = ref<null|HTMLAudioElement>(null)
+const audio = ref<null | HTMLAudioElement>(null)
 
 const playclass = ref('disk')
 const play = () => {
+    // 判断是否加载完成
+    audio.value?.onloadedmetadata
     if (playclass.value === 'disk') {
         playclass.value = 'disk running'
         audio.value?.play()
@@ -70,11 +74,26 @@ getMusicdetail(musicId.value).then(res => {
 const lrc = ref('')
 getlyric(musicId.value).then(res => {
     console.log("歌词：", res)
-    if(res.code === 200) {
+    if (res.code === 200) {
         lrc.value = res.lrc.lyric
     }
 })
 
+// 检测歌曲是否加载完成
+const onLoadedmetadata = (res: Event) => {
+    console.log("加载完成", res)
+}
+
+// 进度条
+const onTimeupdate = (res: any) => {
+    // state.audio.currentTime = res.target.currentTime;
+    // console.log(state.audio.currentTime)
+    // state.sliderTime = parseInt(
+    //     (state.audio.currentTime / state.audio.maxTime) * 100
+    // );
+    // state.sliderTime= formatProcessToolTip(state.sliderTime)
+    console.log(res)
+}
 
 
 </script>
@@ -157,5 +176,13 @@ getlyric(musicId.value).then(res => {
     width: 60%;
     line-height: 1.5;
     margin: auto;
+}
+
+.range {
+    position: fixed;
+    bottom: 30px;
+    width: 60%;
+    left: 50%;
+    transform: translateX(-50%)
 }
 </style>

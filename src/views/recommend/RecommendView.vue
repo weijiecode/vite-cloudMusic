@@ -157,12 +157,16 @@ const toPlay = (id: number) => {
 
 .songName {
     margin-bottom: 4px;
+    height: 22.5px;
+    overflow: hidden;
+    width: 86%;
 }
 
 .songInfo {
     color: gray;
     font-size: 12px;
-
+    height: 16.5px;
+    overflow: hidden;
 }
 
 .sq_icon {
