@@ -155,11 +155,16 @@ const toPlay = (id: number) => {
     z-index: 1000;
 }
 
+.newSong>li>p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80%;
+}
+
 .songName {
     margin-bottom: 4px;
     height: 22.5px;
-    overflow: hidden;
-    width: 86%;
 }
 
 .songInfo {
